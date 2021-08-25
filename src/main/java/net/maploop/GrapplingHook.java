@@ -94,21 +94,30 @@ public class GrapplingHook extends JavaPlugin implements Listener {
                 } else if (args[0] != null) {
                     Player target = Bukkit.getPlayer(args[0]);
                     if (target != null && target.isOnline()) {
+
                         ItemStack grappling_hook = new ItemStack(Material.FISHING_ROD);
                         ItemMeta grappling_hook_meta = grappling_hook.getItemMeta();
                         grappling_hook_meta.setDisplayName(Util.chat(getConfig().getString("grapplinghook.displayname")));
                         List<String> grappling_hook_lore = new ArrayList<String>();
+
                         if (getConfig().getBoolean("grapplinghook.lore-enabled")) {
                             for(String agrappling_hook_lore : getConfig().getStringList("grapplinghook.lore")){
                                 grappling_hook_lore.add(Util.chat(agrappling_hook_lore));
                             }
                         }
+
                         if (getConfig().getBoolean("grapplinghook.shiny")) {
                             grappling_hook_meta.addEnchant(Enchantment.LUCK, 1, false);
                         }
+
                         if (getConfig().getBoolean("grapplinghook.unbreakable")) {
                             grappling_hook_meta.setUnbreakable(true);
                         }
+
+                        if (getConfig().getBoolean("grapplinghook.use-custom-model-data")) {
+                            grappling_hook_meta.setCustomModelData(getConfig().getInt("grapplinghook.data"));
+                        }
+
                         grappling_hook_meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
                         grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                         grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
