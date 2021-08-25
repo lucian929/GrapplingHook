@@ -1,8 +1,9 @@
 name: GrapplingHook
 main: net.maploop.GrapplingHook
-version: 1.8-RAIN
+version: 1.9
 api-version: 1.16
 
 commands:
   grapplinghook:
     aliases: gh
+    description: Shows plugin help.

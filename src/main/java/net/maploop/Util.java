@@ -19,16 +19,15 @@ public class Util implements TabCompleter {
     		if(sender.hasPermission("grapplinghook.admin")){
 			    arguments.add("help");
 			    arguments.add("give");
-			    arguments.add("get");
 			    arguments.add("reload");
 		    }
     	}
-    	List<String> resault = new ArrayList<String>();
+    	List<String> result = new ArrayList<String>();
     	if(args.length == 1) {
     		for(String a : arguments) {
-    			if(a.toLowerCase().startsWith(args[0].toLowerCase())) resault.add(a);
+    			if(a.toLowerCase().startsWith(args[0].toLowerCase())) result.add(a);
     		}
-    		return resault;
+    		return result;
     	}
     	
 		return null;

@@ -36,7 +36,7 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         getCommand("gh").setTabCompleter(new Util());
         getCommand("grapplinghook").setTabCompleter(new Util());
         ConsoleCommandSender console = Bukkit.getConsoleSender();
-        console.sendMessage(Util.chat("&eGrappling Hook&a Plugin loaded successfully! &eVersion 1.8-RAIN"));
+        console.sendMessage(Util.chat("&eGrappling Hook&a Plugin loaded successfully! &eVersion 1.9"));
     }
 
     @Override
@@ -84,57 +84,5 @@ public class GrapplingHook extends JavaPlugin implements Listener {
 
 
         }
-    }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
-        if (s.equalsIgnoreCase("ghconsolegive")) {
-            if(!(sender instanceof Player)){
-                if (args.length == 0) {
-                    sender.sendMessage(Util.chat("&cPlease specify a player."));
-                } else if (args[0] != null) {
-                    Player target = Bukkit.getPlayer(args[0]);
-                    if (target != null && target.isOnline()) {
-
-                        ItemStack grappling_hook = new ItemStack(Material.FISHING_ROD);
-                        ItemMeta grappling_hook_meta = grappling_hook.getItemMeta();
-                        grappling_hook_meta.setDisplayName(Util.chat(getConfig().getString("grapplinghook.displayname")));
-                        List<String> grappling_hook_lore = new ArrayList<String>();
-
-
-                        if (getConfig().getBoolean("grapplinghook.lore-enabled")) {
-                            for(String agrappling_hook_lore : getConfig().getStringList("grapplinghook.lore")){
-                                grappling_hook_lore.add(Util.chat(agrappling_hook_lore));
-                            }
-                        }
-
-                        if (getConfig().getBoolean("grapplinghook.shiny")) {
-                            grappling_hook_meta.addEnchant(Enchantment.LUCK, 1, false);
-                        }
-
-                        if (getConfig().getBoolean("grapplinghook.unbreakable")) {
-                            grappling_hook_meta.setUnbreakable(true);
-                        }
-
-                        if (getConfig().getBoolean("grapplinghook.use-custom-model-data")) {
-                            grappling_hook_meta.setCustomModelData(getConfig().getInt("grapplinghook.data"));
-                        }
-
-                        grappling_hook_meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-                        grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                        grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                        grappling_hook_meta.setLore(grappling_hook_lore);
-                        grappling_hook.setItemMeta(grappling_hook_meta);
-                        target.getInventory().addItem(grappling_hook);
-                        sender.sendMessage(Util.chat("&aGave " + target.getName() + " &8x1 &eGRAPPLING_HOOK&a."));
-                    } else {
-                        sender.sendMessage(Util.chat("&cPlayer not found."));
-                    }
-                }
-            }
-
-
-
-        }
-        return true;
     }
 }
