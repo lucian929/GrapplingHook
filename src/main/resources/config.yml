@@ -29,7 +29,7 @@ grapplinghook:
   # Enables custom model data usage.
   use-custom-model-data: true
   # Set CustomModelData Number
-  data: 10
+  data: 7
   lore:
     - '&7Travel in style using'
     - '&7this Grappling Hook.'

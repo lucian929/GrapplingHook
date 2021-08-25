@@ -89,6 +89,11 @@ public class MainCommand implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("grapplinghook.unbreakable")) {
                                 grappling_hook_meta.setUnbreakable(true);
                             }
+
+                            if (plugin.getConfig().getBoolean("grapplinghook.use-custom-model-data")) {
+                                grappling_hook_meta.setCustomModelData(plugin.getConfig().getInt("grapplinghook.data"));
+                            }
+
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
