@@ -1,6 +1,6 @@
 name: GrapplingHook
 main: net.maploop.GrapplingHook
-version: 1.9
+version: ${project.version}
 api-version: 1.16
 
 commands:
