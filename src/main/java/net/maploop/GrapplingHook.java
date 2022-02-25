@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,9 +50,16 @@ public class GrapplingHook extends JavaPlugin implements Listener {
     @EventHandler()
     public void onRightClick(PlayerFishEvent e) {
         Player p = e.getPlayer();
-        ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
+        //ItemStack item = p.getInventory().getItemInMainHand();
+
+        ItemStack item = p.getInventory().getItemInMainHand();
+        // if the item is air, return
+        if (item.getType() == Material.AIR) {
+            item = p.getInventory().getItemInOffHand();
+        }
+
+
         if (e.getState() == PlayerFishEvent.State.REEL_IN || e.getState() == PlayerFishEvent.State.IN_GROUND) {
-                item = e.getPlayer().getInventory().getItemInOffHand();
                 if (item.getItemMeta().getItemFlags().contains(ItemFlag.HIDE_ATTRIBUTES)) {
                     if (getConfig().getBoolean("cooldown-enabled")) {
                         // adding cooldown
@@ -65,28 +73,24 @@ public class GrapplingHook extends JavaPlugin implements Listener {
                                 return;
                             }
                         }
-
-                        if (item == null) {
-                            e.getPlayer().getInventory().getItemInOffHand();
-                        }
-
-                        cooldown.put(p.getName(), System.currentTimeMillis() + (cooldowntime * 1000L));
-                        Location loc1 = p.getLocation();
-                        Location loc2 = e.getHook().getLocation();
-
-                        Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
-                        p.setVelocity(v);
-
-                    } else if (!getConfig().getBoolean("cooldown-enabled")) {
-                        Location loc1 = p.getLocation();
-                        Location loc2 = e.getHook().getLocation();
-
-                        Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
-                        p.setVelocity(v);
                     }
-                    if (getConfig().getBoolean("cancel-damage"))
-                        FLYING_TIMEOUT.put(p.getUniqueId(), System.currentTimeMillis() + (flyingTimeout * 1000L));
+
+                    cooldown.put(p.getName(), System.currentTimeMillis() + (cooldowntime * 1000L));
+                    Location loc1 = p.getLocation();
+                    Location loc2 = e.getHook().getLocation();
+
+                    Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
+                    p.setVelocity(v);
+
+                } else if (!getConfig().getBoolean("cooldown-enabled")) {
+                    Location loc1 = p.getLocation();
+                    Location loc2 = e.getHook().getLocation();
+
+                    Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
+                    p.setVelocity(v);
                 }
+                if (getConfig().getBoolean("cancel-damage"))
+                    FLYING_TIMEOUT.put(p.getUniqueId(), System.currentTimeMillis() + (flyingTimeout * 1000L));
+            }
         }
     }
-}
