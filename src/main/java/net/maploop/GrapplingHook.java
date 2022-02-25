@@ -49,40 +49,44 @@ public class GrapplingHook extends JavaPlugin implements Listener {
     @EventHandler()
     public void onRightClick(PlayerFishEvent e) {
         Player p = e.getPlayer();
-        ItemStack item = p.getItemInHand();
+        ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
         if (e.getState() == PlayerFishEvent.State.REEL_IN || e.getState() == PlayerFishEvent.State.IN_GROUND) {
-            if (item.getItemMeta().getItemFlags().contains(ItemFlag.HIDE_ATTRIBUTES)) {
-                if (getConfig().getBoolean("cooldown-enabled")) {
-                    // adding cooldown
-                    if (cooldown.containsKey(p.getName())) {
-                        // if player is inside our hashmap ::
-                        if (cooldown.get(p.getName()) > System.currentTimeMillis()) {
-                            // they still have time in cooldown
-                            p.sendMessage(Util.chat(getConfig().getString("messages.on-cooldown")));
-                            if (getConfig().getBoolean("grapplinghook.error-sound-enabled"))
-                                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2F, 0);
-                            return;
+                item = e.getPlayer().getInventory().getItemInOffHand();
+                if (item.getItemMeta().getItemFlags().contains(ItemFlag.HIDE_ATTRIBUTES)) {
+                    if (getConfig().getBoolean("cooldown-enabled")) {
+                        // adding cooldown
+                        if (cooldown.containsKey(p.getName())) {
+                            // if player is inside our hashmap ::
+                            if (cooldown.get(p.getName()) > System.currentTimeMillis()) {
+                                // they still have time in cooldown
+                                p.sendMessage(Util.chat(getConfig().getString("messages.on-cooldown")));
+                                if (getConfig().getBoolean("grapplinghook.error-sound-enabled"))
+                                    p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2F, 0);
+                                return;
+                            }
                         }
+
+                        if (item == null) {
+                            e.getPlayer().getInventory().getItemInOffHand();
+                        }
+
+                        cooldown.put(p.getName(), System.currentTimeMillis() + (cooldowntime * 1000L));
+                        Location loc1 = p.getLocation();
+                        Location loc2 = e.getHook().getLocation();
+
+                        Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
+                        p.setVelocity(v);
+
+                    } else if (!getConfig().getBoolean("cooldown-enabled")) {
+                        Location loc1 = p.getLocation();
+                        Location loc2 = e.getHook().getLocation();
+
+                        Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
+                        p.setVelocity(v);
                     }
-                    cooldown.put(p.getName(), System.currentTimeMillis() + (cooldowntime * 1000L));
-                    Location loc1 = p.getLocation();
-                    Location loc2 = e.getHook().getLocation();
-
-                    Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
-                    p.setVelocity(v);
-
-                } else if (!getConfig().getBoolean("cooldown-enabled")) {
-                    Location loc1 = p.getLocation();
-                    Location loc2 = e.getHook().getLocation();
-
-                    Vector v = new Vector(loc2.getX() - loc1.getX(), 1, loc2.getZ() - loc1.getZ());
-                    p.setVelocity(v);
+                    if (getConfig().getBoolean("cancel-damage"))
+                        FLYING_TIMEOUT.put(p.getUniqueId(), System.currentTimeMillis() + (flyingTimeout * 1000L));
                 }
-                if(getConfig().getBoolean("cancel-damage"))
-                    FLYING_TIMEOUT.put(p.getUniqueId(), System.currentTimeMillis() + (flyingTimeout * 1000L));
-            }
-
-
         }
     }
 }
