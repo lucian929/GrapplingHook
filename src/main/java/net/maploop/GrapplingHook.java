@@ -14,6 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -50,17 +53,19 @@ public class GrapplingHook extends JavaPlugin implements Listener {
     @EventHandler()
     public void onRightClick(PlayerFishEvent e) {
         Player p = e.getPlayer();
-        //ItemStack item = p.getInventory().getItemInMainHand();
 
         ItemStack item = p.getInventory().getItemInMainHand();
-        // if the item is air, return
         if (item.getType() == Material.AIR) {
             item = p.getInventory().getItemInOffHand();
         }
-
+        NamespacedKey key = new NamespacedKey(this, "grappling_hook");
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
 
         if (e.getState() == PlayerFishEvent.State.REEL_IN || e.getState() == PlayerFishEvent.State.IN_GROUND) {
-                if (item.getItemMeta().getItemFlags().contains(ItemFlag.HIDE_ATTRIBUTES)) {
+            if (container.has(key, PersistentDataType.INTEGER)) {
+                int dataValue = container.get(key, PersistentDataType.INTEGER);
+                if (dataValue == 1) {
                     if (getConfig().getBoolean("cooldown-enabled")) {
                         // adding cooldown
                         if (cooldown.containsKey(p.getName())) {
@@ -94,3 +99,4 @@ public class GrapplingHook extends JavaPlugin implements Listener {
             }
         }
     }
+}
