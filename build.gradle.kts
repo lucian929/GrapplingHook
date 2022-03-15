@@ -5,6 +5,7 @@
 plugins {
     java
     `maven-publish`
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 repositories {
@@ -19,22 +20,35 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 }
 
 group = "net.maploop"
-version = "1.10.0"
+version = "1.10.1"
 description = "GrapplingHook"
 java.sourceCompatibility = JavaVersion.VERSION_16
+
 
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
     }
 
-    /*tasks {
+    tasks {
         jar {
-            destinationDirectory.set(file("D:/stuff/Code/debug-server/plugins"  )) // Ignore please, I use this for debugging.
+            destinationDirectory.set(file("D:/stuff/Code/debug-server/plugins")) // Ignore please, I use this for debugging.
         }
-    }*/
+    }
+}
+
+bukkit {
+    main = "net.maploop.GrapplingHook"
+    apiVersion = "1.16"
+    name = "GrapplingHook"
+    commands {
+        register("grapplinghook") {
+            description = "Shows plugin help."
+            aliases = listOf("gh")
+        }
+    }
 }

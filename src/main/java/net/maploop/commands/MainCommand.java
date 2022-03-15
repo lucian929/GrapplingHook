@@ -5,10 +5,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.maploop.Util;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +62,14 @@ public class MainCommand implements CommandExecutor {
                     if (args[1] != null) {
                         Player target = Bukkit.getPlayer(args[1]);
                         if (target != null && target.isOnline()) {
+
                             ItemStack grappling_hook = new ItemStack(Material.FISHING_ROD);
                             ItemMeta grappling_hook_meta = grappling_hook.getItemMeta();
+
                             grappling_hook_meta.setDisplayName(Util.chat(plugin.getConfig().getString("grapplinghook.displayname")));
+
                             List<String> grappling_hook_lore = new ArrayList<String>();
+
                             if (plugin.getConfig().getBoolean("grapplinghook.lore-enabled")) {
                                 for(String agrappling_hook_lore : plugin.getConfig().getStringList("grapplinghook.lore")){
                                     grappling_hook_lore.add(Util.chat(agrappling_hook_lore));
@@ -84,9 +86,13 @@ public class MainCommand implements CommandExecutor {
                                 grappling_hook_meta.setCustomModelData(plugin.getConfig().getInt("grapplinghook.data"));
                             }
 
+                            NamespacedKey key = new NamespacedKey(plugin, "grappling_hook");
+
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                             grappling_hook_meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            grappling_hook_meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
+
                             grappling_hook_meta.setLore(grappling_hook_lore);
 
                             grappling_hook.setItemMeta(grappling_hook_meta);
