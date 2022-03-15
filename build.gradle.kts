@@ -34,11 +34,11 @@ publishing {
         from(components["java"])
     }
 
-    tasks {
+    /*tasks {
         jar {
             destinationDirectory.set(file("D:/stuff/Code/debug-server/plugins")) // Ignore please, I use this for debugging.
         }
-    }
+    }*/
 }
 
 bukkit {
