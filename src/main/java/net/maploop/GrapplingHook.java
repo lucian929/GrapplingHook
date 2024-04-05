@@ -38,7 +38,11 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), this);
-        Bukkit.getPluginManager().registerEvents(new CustomFishingRodCastListener(this), this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("CustomFishing")) {
+            Bukkit.getPluginManager().registerEvents(new CustomFishingRodCastListener(this), this);
+        }
+
         getCommand("grapplinghook").setExecutor(new MainCommand(this));
         getCommand("gh").setExecutor(new MainCommand(this));
         getCommand("gh").setTabCompleter(new Util());
