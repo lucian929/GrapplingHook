@@ -1,6 +1,7 @@
 package net.maploop;
 
 import net.maploop.commands.MainCommand;
+import net.maploop.listener.CustomFishingRodCastListener;
 import net.maploop.listener.EntityDamage;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -37,6 +38,7 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), this);
+        Bukkit.getPluginManager().registerEvents(new CustomFishingRodCastListener(this), this);
         getCommand("grapplinghook").setExecutor(new MainCommand(this));
         getCommand("gh").setExecutor(new MainCommand(this));
         getCommand("gh").setTabCompleter(new Util());
@@ -51,6 +53,9 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         console.sendMessage(Util.chat("&eGrappling Hook&c Plugin was disabled."));
     }
 
+    public NamespacedKey key() {
+        return KEY;
+    }
 
     @EventHandler()
     public void onRightClick(PlayerFishEvent e) {
