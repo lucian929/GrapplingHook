@@ -24,6 +24,8 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class GrapplingHook extends JavaPlugin implements Listener {
+    private final NamespacedKey KEY = new NamespacedKey(this, "grappling_hook");
+
     public static Map<UUID, Long> FLYING_TIMEOUT = new HashMap<UUID, Long>();
 
     private final HashMap<String, Long> cooldown = new HashMap<String, Long>();
@@ -58,13 +60,12 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         if (item.getType() == Material.AIR) {
             item = p.getInventory().getItemInOffHand();
         }
-        NamespacedKey key = new NamespacedKey(this, "grappling_hook");
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         if (e.getState() == PlayerFishEvent.State.REEL_IN || e.getState() == PlayerFishEvent.State.IN_GROUND) {
-            if (container.has(key, PersistentDataType.INTEGER)) {
-                int dataValue = container.get(key, PersistentDataType.INTEGER);
+            Integer dataValue = container.get(KEY, PersistentDataType.INTEGER);
+            if (dataValue != null) {
                 if (dataValue == 1) {
                     if (getConfig().getBoolean("cooldown-enabled")) {
                         // adding cooldown
