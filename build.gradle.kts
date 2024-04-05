@@ -13,7 +13,7 @@ repositories {
     maven {
         url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
-
+    maven("https://jitpack.io") // Custom-Fishing
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("com.github.Xiao-MoMi:Custom-Fishing:2.1.2") // Custom-Fishing
 }
 
 group = "net.maploop"

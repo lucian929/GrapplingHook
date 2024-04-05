@@ -1,6 +1,7 @@
 package net.maploop;
 
 import net.maploop.commands.MainCommand;
+import net.maploop.listener.CustomFishingRodCastListener;
 import net.maploop.listener.EntityDamage;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -24,6 +25,8 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class GrapplingHook extends JavaPlugin implements Listener {
+    private final NamespacedKey KEY = new NamespacedKey(this, "grappling_hook");
+
     public static Map<UUID, Long> FLYING_TIMEOUT = new HashMap<UUID, Long>();
 
     private final HashMap<String, Long> cooldown = new HashMap<String, Long>();
@@ -35,6 +38,11 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("CustomFishing")) {
+            Bukkit.getPluginManager().registerEvents(new CustomFishingRodCastListener(this), this);
+        }
+
         getCommand("grapplinghook").setExecutor(new MainCommand(this));
         getCommand("gh").setExecutor(new MainCommand(this));
         getCommand("gh").setTabCompleter(new Util());
@@ -49,6 +57,9 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         console.sendMessage(Util.chat("&eGrappling Hook&c Plugin was disabled."));
     }
 
+    public NamespacedKey key() {
+        return KEY;
+    }
 
     @EventHandler()
     public void onRightClick(PlayerFishEvent e) {
@@ -58,13 +69,12 @@ public class GrapplingHook extends JavaPlugin implements Listener {
         if (item.getType() == Material.AIR) {
             item = p.getInventory().getItemInOffHand();
         }
-        NamespacedKey key = new NamespacedKey(this, "grappling_hook");
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         if (e.getState() == PlayerFishEvent.State.REEL_IN || e.getState() == PlayerFishEvent.State.IN_GROUND) {
-            if (container.has(key, PersistentDataType.INTEGER)) {
-                int dataValue = container.get(key, PersistentDataType.INTEGER);
+            Integer dataValue = container.get(KEY, PersistentDataType.INTEGER);
+            if (dataValue != null) {
                 if (dataValue == 1) {
                     if (getConfig().getBoolean("cooldown-enabled")) {
                         // adding cooldown

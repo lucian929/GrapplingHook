@@ -1,6 +1,12 @@
 # Project exclude paths
 /target/
 /bin/
+/build/
+
+# Editor
 /.idea/
 
 *.iml
+
+# Gradle
+/.gradle/
